@@ -1,0 +1,38 @@
+name: Build images
+
+# curl -sfL https://get.k3s.io | sh -s - server --docker --disable=traefik --tls-san=k8s-master.onioncrypto.lan
+
+# volumes:
+# /etc/rancher
+# /var/lib/kubelet
+# /var/lib/containerd
+# /var/lib/rancher
+# /usr/local/bin
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - name: debian
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: docker compose -f image/${{ matrix.os.name }}/manifest.yml build --with-dependencies --pull --push

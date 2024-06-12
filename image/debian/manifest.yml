@@ -1,0 +1,47 @@
+
+services:
+  base:
+    image: ghcr.io/thetredev/sysbox-dockerfiles/debian:latest
+    build:
+      context: ../..
+      dockerfile: image/debian/001-base/Dockerfile
+      cache_from:
+        - type=registry,ref=ghcr.io/thetredev/sysbox-dockerfiles/debian:latest
+      cache_to:
+        - type=inline
+
+  docker:
+    image: ghcr.io/thetredev/sysbox-dockerfiles/debian/docker:latest
+    build:
+      context: ../..
+      dockerfile: image/debian/002-docker/Dockerfile
+      cache_from:
+        - type=registry,ref=ghcr.io/thetredev/sysbox-dockerfiles/debian/docker:latest
+      cache_to:
+        - type=inline
+    depends_on:
+      - base
+
+  systemd:
+    image: ghcr.io/thetredev/sysbox-dockerfiles/debian/systemd:latest
+    build:
+      context: ../..
+      dockerfile: image/debian/003-systemd/Dockerfile
+      cache_from:
+        - type=registry,ref=ghcr.io/thetredev/sysbox-dockerfiles/debian/systemd:latest
+      cache_to:
+        - type=inline
+    depends_on:
+      - base
+
+  systemd-docker:
+    image: ghcr.io/thetredev/sysbox-dockerfiles/debian/systemd/docker:latest
+    build:
+      context: ../..
+      dockerfile: image/debian/004-systemd-docker/Dockerfile
+      cache_from:
+        - type=registry,ref=ghcr.io/thetredev/sysbox-dockerfiles/debian/systemd/docker:latest
+      cache_to:
+        - type=inline
+    depends_on:
+      - systemd
