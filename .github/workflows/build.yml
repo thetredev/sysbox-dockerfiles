@@ -35,4 +35,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: docker compose -f image/${{ matrix.os.name }}/manifest.yml build --with-dependencies --pull --push
+      - name: Build and push container images
+        run: docker compose -f image/${{ matrix.os.name }}/manifest.yml build --with-dependencies --pull --push
