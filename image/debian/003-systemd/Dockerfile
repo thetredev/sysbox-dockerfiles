@@ -14,6 +14,7 @@ RUN --mount=source=./files,target=${BUILD_CONTEXT_PATH},ro \
         iproute2 \
         kmod \
         udev \
+        openssh-server \
     && systemctl mask \
         systemd-udevd.service \
         systemd-udevd-kernel.socket \
@@ -22,7 +23,10 @@ RUN --mount=source=./files,target=${BUILD_CONTEXT_PATH},ro \
         sys-kernel-debug.mount \
         sys-kernel-tracing.mount \
         sys-kernel-config.mount \
-    && ln -sf /usr/lib/systemd/system/multi-user.target /etc/systemd/system/default.target
+    && ln -sf /usr/lib/systemd/system/multi-user.target /etc/systemd/system/default.target \
+    && install -m 0700 -d /root/.ssh \
+    && touch /root/.ssh/authorized_keys \
+    && chmod 0600 /root/.ssh/authorized_keys
 
 # Optimize journald for container environment
 COPY --link=true files/configs/systemd/journald.conf /etc/systemd/journald.conf
@@ -32,6 +36,9 @@ COPY --link=true files/configs/systemd/console-getty.service.d/override.conf /et
 
 # Make use of stopsignal (instead of sigterm) to stop systemd containers.
 STOPSIGNAL SIGRTMIN+3
+
+# Expose SSH port
+EXPOSE 22
 
 # Set systemd as entrypoint.
 ENTRYPOINT [ "/sbin/init", "--log-level=err" ]
