@@ -16,13 +16,18 @@ RUN --mount=source=./files,target=${BUILD_CONTEXT_PATH},ro \
     ${BUILD_CONTEXT_PATH}/ca.crt /usr/local/share/ca-certificates/ca.crt \
     && ${BUILD_CONTEXT_PATH}/scripts/install-packages.sh \
         bash-completion \
+        build-essential \
         ca-certificates \
         curl \
+        jq \
         wget \
         locales \
         gnupg2 \
         vim \
         git \
+        zip \
+        unzip \
+        xz-utils \
         coreutils \
         binutils \
         less \
