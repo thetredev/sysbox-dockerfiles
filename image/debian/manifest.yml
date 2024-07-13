@@ -45,3 +45,15 @@ services:
         - type=inline
     depends_on:
       - systemd
+
+  kindbox:
+    image: ghcr.io/thetredev/sysbox-dockerfiles/debian/kindbox:latest
+    build:
+      context: ../..
+      dockerfile: image/debian/005-kindbox/Dockerfile
+      cache_from:
+        - type=registry,ref=ghcr.io/thetredev/sysbox-dockerfiles/debian/kindbox:latest
+      cache_to:
+        - type=inline
+    depends_on:
+      - systemd-docker
